@@ -5,7 +5,8 @@
             [hlirgh.utils :refer [pixels-per-tile directions]]
             [hlirgh.entities.core :refer [move-entity]]
             [hlirgh.entities.player :refer [create-player]]
-            [hlirgh.entities.ruffian :refer [create-ruffian]]))
+            [hlirgh.entities.ruffian :refer [create-ruffian]])
+  (:import [com.badlogic.gdx.scenes.scene2d.ui Dialog]))
 
 
 (def modified-namespaces
@@ -70,8 +71,10 @@
                       :align (align :center)
                       :set-width (width screen)
                       :set-height 30
-                      :debug)]
-      body))
+                      :debug)
+          popup (dialog "I'm a dialog" (skin "uiskin.json"))]
+      (actor! popup :set-position 400 300)
+     popup))
   )
 
 (defgame hlirgh
