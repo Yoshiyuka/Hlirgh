@@ -24,6 +24,7 @@
     (clear!)
     (doseq [ns-sym (modified-namespaces)]
       (require ns-sym :reload))
+    (position! screen (:x (first entities)) (:y (first entities)))
     (render! screen entities))
   
   :on-resize
