@@ -69,10 +69,12 @@
     (let [ui-skin (skin "uiskin.json")
           popup (dialog (:name (:info screen)) ui-skin)
           {:keys [x y]} (:info screen)]
-      (println (:x (:info screen)))
-      (println (:y (:info screen)))
+      (->> (filter dialog? entities)
+           (map #(dialog! % :hide))
+           (dorun))
       (actor! popup :set-position x (- (game :height) y))
-      popup))
+      [(first entities) popup]))
+      ;(vector (first entities) popup)))
   
   :on-render
   (fn [screen entities]
@@ -90,10 +92,8 @@
                       :align (align :center)
                       :set-width (width screen)
                       :set-height 30
-                      :debug)
-          popup (dialog "I'm a dialog" (skin "uiskin.json"))]
-      (actor! popup :set-position 400 300)
-     entities))
+                      :debug)]
+     body))
   )
 
 (defgame hlirgh
