@@ -4,7 +4,8 @@
             [play-clj.ui :refer :all]
             [hlirgh.utils :refer [pixels-per-tile directions]]
             [hlirgh.entities.core :refer [move-entity]]
-            [hlirgh.entities.player :refer [create-player]]))
+            [hlirgh.entities.player :refer [create-player]]
+            [hlirgh.entities.ruffian :refer [create-ruffian]]))
 
 
 (def modified-namespaces
@@ -15,9 +16,10 @@
   (fn [screen entities]
     (let [orthogonal-map (orthogonal-tiled-map "test.tmx" (/ 1 pixels-per-tile))
           camera (orthographic :translate (/ 800 (* 2 pixels-per-tile)) (/ 600 (* 2 pixels-per-tile)))
-          player (create-player)]
+          player (create-player)
+          ruffians (create-ruffian {:x (rand-int 24) :y (rand-int 24)})]
       (update! screen :renderer orthogonal-map :camera camera)   
-      [player]))
+      [player ruffians]))
   
   :on-render
   (fn [screen entities]
@@ -34,7 +36,8 @@
   :on-key-down
   (fn [screen entities]
     (if (directions (:key screen))
-      (move-entity (first entities) (directions (:key screen)))
+      (vector (move-entity (first entities) (directions (:key screen)) (tiled-map-layer screen "Base"))
+              (rest entities))
       entities))
   )
 
