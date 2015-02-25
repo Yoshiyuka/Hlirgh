@@ -40,6 +40,15 @@
       (vector (move-entity (first entities) (directions (:key screen)) (tiled-map-layer screen "Base"))
               (rest entities))
       entities))
+  
+  :on-touch-down
+  (fn [screen entities]
+    (let[pos (input->screen screen (:input-x screen) (:input-y screen))
+         entities-at-pos (filter (fn [entity]
+                                   (and (= (:x entity) (int (:x pos))) (= (:y entity) (int (:y pos)))))
+                                 entities)]
+      (dorun (map #(screen! overlay-screen :display-entity-info :info {:name (:name %) :x (:input-x screen) :y (:input-y screen)}) entities-at-pos)))
+    entities)
   )
 
 (defscreen overlay-screen
@@ -54,6 +63,16 @@
                   :set-height 30
                   :debug)]
       body))
+  
+  :display-entity-info
+  (fn [screen entities]
+    (let [ui-skin (skin "uiskin.json")
+          popup (dialog (:name (:info screen)) ui-skin)
+          {:keys [x y]} (:info screen)]
+      (println (:x (:info screen)))
+      (println (:y (:info screen)))
+      (actor! popup :set-position x (- (game :height) y))
+      popup))
   
   :on-render
   (fn [screen entities]
@@ -74,7 +93,7 @@
                       :debug)
           popup (dialog "I'm a dialog" (skin "uiskin.json"))]
       (actor! popup :set-position 400 300)
-     popup))
+     entities))
   )
 
 (defgame hlirgh
