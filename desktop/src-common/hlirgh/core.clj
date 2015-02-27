@@ -6,7 +6,7 @@
             [hlirgh.entities.core :refer [move-entity]]
             [hlirgh.entities.player :refer [create-player]]
             [hlirgh.entities.ruffian :refer [create-ruffian]])
-  (:import [com.badlogic.gdx.scenes.scene2d.ui Dialog]))
+  (:import [com.badlogic.gdx.scenes.scene2d.ui Label]))
 
 
 (def modified-namespaces
@@ -47,7 +47,7 @@
          entities-at-pos (filter (fn [entity]
                                    (and (= (:x entity) (int (:x pos))) (= (:y entity) (int (:y pos)))))
                                  entities)]
-      (dorun (map #(screen! overlay-screen :display-entity-info :info {:name (:name %) :x (:input-x screen) :y (:input-y screen)}) entities-at-pos)))
+      (dorun (map #(screen! overlay-screen :display-entity-info :info {:name (:name %) :description (:description %) :x (:input-x screen) :y (:input-y screen)}) entities-at-pos)))
     entities)
   )
 
@@ -68,10 +68,14 @@
   (fn [screen entities]
     (let [ui-skin (skin "uiskin.json")
           popup (dialog (:name (:info screen)) ui-skin)
-          {:keys [x y]} (:info screen)]
+          {:keys [description x y]} (:info screen)
+          content (label description ui-skin)]
       (->> (filter dialog? entities)
            (map #(dialog! % :hide))
            (dorun))
+      (label! content :set-wrap true)
+      (dialog! popup :text content)
+      (dialog! popup :button "Close")
       (actor! popup :set-position x (- (game :height) y))
       [(first entities) popup]))
       ;(vector (first entities) popup)))
