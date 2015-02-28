@@ -7,7 +7,7 @@
   { :hp 100
     :name "Ruffian"
     :description "This one looks up to no good. Better keep your distance."
-    :x 1
+    :x 2
     :y 1
     :width 1
     :height 1

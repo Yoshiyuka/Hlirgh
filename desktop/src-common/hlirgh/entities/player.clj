@@ -6,6 +6,7 @@
 (def player
   { :hp 100
     :name "Hero"
+    :description "Savior of distressed damsels."
     :x 1
     :y 1
     :width 1
