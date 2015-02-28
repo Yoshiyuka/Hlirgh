@@ -102,12 +102,15 @@
   
   :on-ui-changed
   (fn [screen entities]
-    (dorun (map (fn [entity] 
-                  (if (identical? (:actor screen) entity)
-                    (clojure.pprint/pprint "IDENTICAL!")
-                    (clojure.pprint/pprint "Not Identical."))) entities))
-    (vector (filter #(identical? (:actor screen) %) entities)))
-    ;entities)
+    (let [actor (-> (actor! (:actor screen) :get-parent)
+                    (actor! :get-parent))]
+                      ;(dorun (map (fn [entity]
+                      ;              (if (identical? (:object entity) actor)
+                      ;              (println "identical.")
+                      ;              (println "not identical."))) entities)))
+                    ;(clojure.pprint/pprint "Still haven't found test."))
+     ;               (clojure.pprint/pprint (actor! entity :get-name))) entities))
+    (vector (filter #(not(identical? actor (:object %))) entities))))
   )
 
 (defgame hlirgh
