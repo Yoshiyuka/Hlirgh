@@ -74,8 +74,9 @@
            (map #(dialog! % :hide))
            (dorun))
       (label! content :set-wrap true)
-      (dialog! popup :text content)
+      (dialog! popup :text description)
       (dialog! popup :button "Close")
+      (actor! popup :set-name "TEST")
       (actor! popup :set-position x (- (game :height) y))
       [(first entities) popup]))
       ;(vector (first entities) popup)))
@@ -98,6 +99,15 @@
                       :set-height 30
                       :debug)]
      body))
+  
+  :on-ui-changed
+  (fn [screen entities]
+    (dorun (map (fn [entity] 
+                  (if (identical? (:actor screen) entity)
+                    (clojure.pprint/pprint "IDENTICAL!")
+                    (clojure.pprint/pprint "Not Identical."))) entities))
+    (vector (filter #(identical? (:actor screen) %) entities)))
+    ;entities)
   )
 
 (defgame hlirgh
