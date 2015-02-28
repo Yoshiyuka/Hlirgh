@@ -68,15 +68,25 @@
   (fn [screen entities]
     (let [ui-skin (skin "uiskin.json")
           popup (dialog (:name (:info screen)) ui-skin)
-          {:keys [description x y]} (:info screen)
-          content (label description ui-skin)]
+          {:keys [description x y]} (:info screen)]
+          ;content (new Label description ui-skin)]
       (->> (filter dialog? entities)
            (map #(dialog! % :hide))
            (dorun))
-      (label! content :set-wrap true)
+      ;(label! content :set-wrap true)
+      ;(table! (dialog! popup :get-content-table) :add content)
+      ;(dialog! popup :text description)
+      ;(label! content :set-width (dialog! popup :get-width))
+     ; (label! content :set-alignment (align :left))
+     ; (label! content :set-width 10)
+     ; (label! content :set-wrap true)
       (dialog! popup :text description)
+      
+      (table! (dialog! popup :get-content-table) :debug-all)
+      (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :expand-y)
+      (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :align (align :top))
+      (dialog! popup :set-width (.getPrefWidth (first (table! (dialog! popup :get-content-table) :get-cells))))
       (dialog! popup :button "Close")
-      (actor! popup :set-name "TEST")
       (actor! popup :set-position x (- (game :height) y))
       [(first entities) popup]))
       ;(vector (first entities) popup)))
@@ -104,12 +114,6 @@
   (fn [screen entities]
     (let [actor (-> (actor! (:actor screen) :get-parent)
                     (actor! :get-parent))]
-                      ;(dorun (map (fn [entity]
-                      ;              (if (identical? (:object entity) actor)
-                      ;              (println "identical.")
-                      ;              (println "not identical."))) entities)))
-                    ;(clojure.pprint/pprint "Still haven't found test."))
-     ;               (clojure.pprint/pprint (actor! entity :get-name))) entities))
     (vector (filter #(not(identical? actor (:object %))) entities))))
   )
 
