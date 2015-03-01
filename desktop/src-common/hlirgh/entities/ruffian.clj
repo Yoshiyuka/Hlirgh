@@ -1,7 +1,8 @@
 (ns hlirgh.entities.ruffian
   (:require
     [play-clj.g2d :refer :all] 
-    [hlirgh.entities.utils :refer [cell-from-atlas]]))
+    [hlirgh.entities.utils :refer [cell-from-atlas]]
+    [hlirgh.entities.core :refer [create-entity]]))
 
 (def ruffian
   { :hp 100
@@ -15,5 +16,5 @@
 
 (defn create-ruffian
   [& custom-stats]
-  (merge (cell-from-atlas (texture "ascii_tileset.png") (:glyph ruffian)) ruffian (first custom-stats)))
+  (create-entity ruffian (first custom-stats)))
 

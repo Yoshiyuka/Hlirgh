@@ -1,6 +1,8 @@
 (ns hlirgh.entities.core
-  (:require [hlirgh.utils :refer [absolute-distance pixels-per-tile]]
+  (:require [play-clj.g2d :refer :all] 
+            [hlirgh.utils :refer [absolute-distance pixels-per-tile]]
             [hlirgh.world.core :refer [tile-walkable?]]
+            [hlirgh.entities.utils :refer [cell-from-atlas]]
             [play-clj.core :refer :all]))
 
 (defn move-entity
@@ -14,3 +16,7 @@
      (if (tile-walkable? cell)
        (assoc entity :x (+ x dx) :y (+ y dy))
        entity))))
+
+(defn create-entity
+  [template & custom-stats]
+  (merge (cell-from-atlas (texture "ascii_tileset.png") (:glyph template)) template (first custom-stats)))

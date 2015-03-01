@@ -78,11 +78,11 @@
       (label! content :set-wrap true)
       (dialog! popup :text (:object content))
       
-      (table! (dialog! popup :get-content-table) :debug-all)
-      (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :expand-y)
-      (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :align (align :top))
-      (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :width 150)
-      (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :fill true true)
+      (-> (first (table! (dialog! popup :get-content-table) :get-cells))
+          (cell! :expand-y)
+          (cell! :align (align :top))
+          (cell! :width 150)
+          (cell! :fill true true))
       
       (dialog! popup :button "Close")
       (actor! popup :set-position x (- (game :height) y))
@@ -106,10 +106,6 @@
                       :set-height 30
                       :debug)]
      body))
-  
-  :on-ui-changed
-  (fn [screen entities]
-    )
   )
 
 (defgame hlirgh
