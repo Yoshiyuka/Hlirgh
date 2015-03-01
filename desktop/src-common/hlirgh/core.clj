@@ -19,9 +19,19 @@
     (let [orthogonal-map (orthogonal-tiled-map "test.tmx" (/ 1 pixels-per-tile))
           camera (orthographic :translate (/ 800 (* 2 pixels-per-tile)) (/ 600 (* 2 pixels-per-tile)))
           player (create-player)
-          ruffians (create-ruffian {:x (rand-int 24) :y (rand-int 24)})]
+          utility-layer (.get (.getLayers (.getMap orthogonal-map)) "Utility")
+          utility-tiles (filter 
+                          #(not= (:cell %) nil) 
+                          (for [x (range (tiled-map-layer! utility-layer :get-width))
+                                y (range (tiled-map-layer! utility-layer :get-height))]
+                            {:cell (tiled-map-layer! utility-layer :get-cell x y) :x x :y y}))
+          ;ruffians (create-ruffian {:x (rand-int 24) :y (rand-int 24)})]
+          ruffian (create-ruffian {:x (:x (first utility-tiles)) :y (:y (first utility-tiles))})]
+          (tiled-map-layer! utility-layer :set-visible false)
+          
+          (println utility-tiles)
       (update! screen :renderer orthogonal-map :camera camera)   
-      [player ruffians]))
+      [player ruffian]))
   
   :on-render
   (fn [screen entities]
@@ -37,6 +47,7 @@
   
   :on-key-down
   (fn [screen entities]
+    ()
     (if (directions (:key screen))
       (vector (move-entity (first entities) (directions (:key screen)) (tiled-map-layer screen "Base"))
               (map (fn [entity] 
