@@ -8,6 +8,7 @@
             [hlirgh.entities.ruffian :refer [create-ruffian]])
   (:import [com.badlogic.gdx.scenes.scene2d.ui Label]))
 
+(declare overlay-screen)
 
 (def modified-namespaces
   (ns-tracker ["src" "src-common"]))
@@ -69,29 +70,23 @@
     (let [ui-skin (skin "uiskin.json")
           popup (dialog (:name (:info screen)) ui-skin)
           {:keys [description x y]} (:info screen)
-          content (new Label description ui-skin)]
+          content (label description ui-skin)]
       (->> (filter dialog? entities)
            (map #(dialog! % :hide))
            (dorun))
-      ;(label! content :set-wrap true)
-      ;(table! (dialog! popup :get-content-table) :add content)
-      ;(dialog! popup :text description)
-      ;(label! content :set-width (dialog! popup :get-width))
-     ; (label! content :set-alignment (align :left))
-     ; (label! content :set-width 10)
+
       (label! content :set-wrap true)
-      (dialog! popup :text ^Label content)
+      (dialog! popup :text (:object content))
       
       (table! (dialog! popup :get-content-table) :debug-all)
       (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :expand-y)
       (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :align (align :top))
       (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :width 150)
       (cell! (first (table! (dialog! popup :get-content-table) :get-cells)) :fill true true)
-      ;(dialog! popup :set-width (.getPrefWidth (first (table! (dialog! popup :get-content-table) :get-cells))))
+      
       (dialog! popup :button "Close")
       (actor! popup :set-position x (- (game :height) y))
       [(first entities) popup]))
-      ;(vector (first entities) popup)))
   
   :on-render
   (fn [screen entities]
@@ -114,9 +109,7 @@
   
   :on-ui-changed
   (fn [screen entities]
-    (let [actor (-> (actor! (:actor screen) :get-parent)
-                    (actor! :get-parent))]
-    (vector (filter #(not(identical? actor (:object %))) entities))))
+    )
   )
 
 (defgame hlirgh
