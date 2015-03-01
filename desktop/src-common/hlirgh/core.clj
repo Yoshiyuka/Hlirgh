@@ -39,7 +39,10 @@
   (fn [screen entities]
     (if (directions (:key screen))
       (vector (move-entity (first entities) (directions (:key screen)) (tiled-map-layer screen "Base"))
-              (rest entities))
+              (map (fn [entity] 
+                     (move-entity entity (second (rand-nth (vec directions))) (tiled-map-layer screen "Base"))) 
+                    (rest entities)))
+              ;(rest entities))
       entities))
   
   :on-touch-down
