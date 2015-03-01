@@ -47,13 +47,12 @@
   
   :on-key-down
   (fn [screen entities]
-    ()
+    (screen! overlay-screen :destroy-dialogs)
     (if (directions (:key screen))
       (vector (move-entity (first entities) (directions (:key screen)) (tiled-map-layer screen "Base"))
               (map (fn [entity] 
                      (move-entity entity (second (rand-nth (vec directions))) (tiled-map-layer screen "Base"))) 
                     (rest entities)))
-              ;(rest entities))
       entities))
   
   :on-touch-down
@@ -101,6 +100,13 @@
       (dialog! popup :button "Close")
       (actor! popup :set-position x (- (game :height) y))
       [(first entities) popup]))
+  
+  :destroy-dialogs
+  (fn [screen entities]
+    (->> (filter dialog? entities)
+           (map #(dialog! % :hide))
+           (dorun))
+    entities)
   
   :on-render
   (fn [screen entities]
