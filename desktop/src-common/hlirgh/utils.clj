@@ -17,3 +17,7 @@
     22 [1 0]
     62 [0 0]})
 
+(defn rand-dir
+  []
+  (second (rand-nth (vec directions))))
+

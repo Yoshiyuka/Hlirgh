@@ -20,6 +20,15 @@
   [tile]
   (walkable-tiles (:kind (tile-properties tile))))
 
+(defn cell-occupied?
+  "Test if the cell is currently occupied by another entity."
+  [cell-pos entities]
+  (let [[x y] cell-pos
+        entities-at-pos (filter (fn [entity]
+                                   (and (= (:x entity) x) (= (:y entity) y)))
+                                 entities)]
+    (not (empty? entities-at-pos))))
+
 (defn spawn-point?
   "Test if the tile is a spawn point."
   [tile]

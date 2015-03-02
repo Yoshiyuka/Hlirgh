@@ -2,7 +2,8 @@
   (:require [ns-tracker.core :refer :all]
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]
-            [hlirgh.utils :refer [pixels-per-tile directions]]
+            [hlirgh.utils :refer [pixels-per-tile directions rand-dir]]
+            [hlirgh.world.core :refer [cell-occupied?]]
             [hlirgh.entities.core :refer [move-entity]]
             [hlirgh.entities.player :refer [create-player]]
             [hlirgh.entities.ruffian :refer [create-ruffians]])
@@ -19,15 +20,7 @@
     (let [orthogonal-map (orthogonal-tiled-map "test.tmx" (/ 1 pixels-per-tile))
           camera (orthographic :translate (/ 800 (* 2 pixels-per-tile)) (/ 600 (* 2 pixels-per-tile)))
           player (create-player)
-          ruffians (create-ruffians screen 4)]
-          ;utility-layer (.get (.getLayers (.getMap orthogonal-map)) "Utility")
-          ;utility-tiles (filter 
-          ;                #(not= (:cell %) nil) 
-          ;                (for [x (range (tiled-map-layer! utility-layer :get-width))
-          ;                      y (range (tiled-map-layer! utility-layer :get-height))]
-          ;                  {:cell (tiled-map-layer! utility-layer :get-cell x y) :x x :y y}))
-          ;ruffian (create-ruffian {:x (:x (first utility-tiles)) :y (:y (first utility-tiles))})]
-
+          ruffians (create-ruffians orthogonal-map 1)]
       (update! screen :renderer orthogonal-map :camera camera)   
       [player ruffians]))
   
@@ -47,10 +40,10 @@
   (fn [screen entities]
     (screen! overlay-screen :destroy-dialogs)
     (if (directions (:key screen))
-      (vector (move-entity (first entities) (directions (:key screen)) (tiled-map-layer screen "Base"))
-              (map (fn [entity] 
-                     (move-entity entity (second (rand-nth (vec directions))) (tiled-map-layer screen "Base"))) 
-                    (rest entities)))
+      (vector (move-entity (first entities) (directions (:key screen)) (tiled-map-layer screen "Base") entities)
+              (map (fn [entity]
+                      (move-entity entity (rand-dir) (tiled-map-layer screen "Base") entities))
+                   (rest entities)))
       entities))
   
   :on-touch-down
