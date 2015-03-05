@@ -5,7 +5,7 @@
             [hlirgh.utils :refer [pixels-per-tile directions rand-dir]]
             [hlirgh.world.core :refer [cell-occupied?]]
             [hlirgh.entities.core :refer [move-entity]]
-            [hlirgh.entities.player :refer [create-player]]
+            [hlirgh.entities.player :refer [player create-player move-player]]
             [hlirgh.entities.ruffian :refer [create-ruffians]])
   (:import [com.badlogic.gdx.scenes.scene2d.ui Label]))
 
@@ -19,17 +19,22 @@
   (fn [screen entities]
     (let [orthogonal-map (orthogonal-tiled-map "test.tmx" (/ 1 pixels-per-tile))
           camera (orthographic :translate (/ 800 (* 2 pixels-per-tile)) (/ 600 (* 2 pixels-per-tile)))
-          player (create-player)
           ruffians (create-ruffians orthogonal-map 5)]
-      (update! screen :renderer orthogonal-map :camera camera)   
-      [player ruffians]))
+      (update! screen :renderer orthogonal-map :camera camera)
+      (swap! player create-player)
+      (add-watch player :player 
+                     (fn [key atom old-state new-state]
+                       (println (:x new-state))
+                       (println (:y new-state))
+                       (position! camera (:x new-state) (:y new-state))))
+      [@player ruffians]))
   
   :on-render
   (fn [screen entities]
     (clear!)
     ;(doseq [ns-sym (modified-namespaces)]
     ;  (require ns-sym :reload))
-    (position! screen (:x (first entities)) (:y (first entities)))
+    ;(position! screen (:x (first entities)) (:y (first entities)))
     (render! screen entities))
   
   :on-resize
@@ -40,7 +45,7 @@
   (fn [screen entities]
     (screen! overlay-screen :destroy-dialogs)
     (if (directions (:key screen))
-      (vector (move-entity (first entities) (directions (:key screen)) (tiled-map-layer screen "Base") entities)
+      (vector (move-player (directions (:key screen)) (tiled-map-layer screen "Base") entities)
               (map (fn [entity]
                       (move-entity entity (rand-dir) (tiled-map-layer screen "Base") entities))
                    (rest entities)))
