@@ -11,11 +11,12 @@
        (abs (- ay by))))
 
 (def directions
-  { 19 [0 1]
-    20 [0 -1]
-    21 [-1 0]
-    22 [1 0]
-    62 [0 0]})
+  { 19 [0 1]   ;up
+    20 [0 -1]  ;down
+    21 [-1 0]  ;left
+    22 [1 0]   ;right
+    62 [0 0]   ;space/stay
+    })
 
 (defn rand-dir
   []

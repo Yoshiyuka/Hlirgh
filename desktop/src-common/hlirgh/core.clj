@@ -11,8 +11,8 @@
 
 (declare overlay-screen)
 
-(def modified-namespaces
-  (ns-tracker ["src" "src-common"]))
+;(def modified-namespaces
+;  (ns-tracker ["src" "src-common"]))
 
 (defscreen main-screen
   :on-show
@@ -20,15 +20,15 @@
     (let [orthogonal-map (orthogonal-tiled-map "test.tmx" (/ 1 pixels-per-tile))
           camera (orthographic :translate (/ 800 (* 2 pixels-per-tile)) (/ 600 (* 2 pixels-per-tile)))
           player (create-player)
-          ruffians (create-ruffians orthogonal-map 1)]
+          ruffians (create-ruffians orthogonal-map 5)]
       (update! screen :renderer orthogonal-map :camera camera)   
       [player ruffians]))
   
   :on-render
   (fn [screen entities]
     (clear!)
-    (doseq [ns-sym (modified-namespaces)]
-      (require ns-sym :reload))
+    ;(doseq [ns-sym (modified-namespaces)]
+    ;  (require ns-sym :reload))
     (position! screen (:x (first entities)) (:y (first entities)))
     (render! screen entities))
   
