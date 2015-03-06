@@ -19,7 +19,7 @@
   (fn [screen entities]
     (let [orthogonal-map (orthogonal-tiled-map "test.tmx" (/ 1 pixels-per-tile))
           camera (orthographic :translate (/ 800 (* 2 pixels-per-tile)) (/ 600 (* 2 pixels-per-tile)))
-          ruffians (create-ruffians orthogonal-map 50)]
+          ruffians (create-ruffians orthogonal-map 5)]
       (update! screen :renderer orthogonal-map :camera camera)
       (swap! player create-player)
       (add-watch player :player 
@@ -43,31 +43,22 @@
   
   :on-key-down
   (fn [screen entities]
-    ;(let [t_entities (transient entities)]
       (screen! overlay-screen :destroy-dialogs)
       (if (directions (:key screen))
-       ;(vector (move-player (directions (:key screen)) (tiled-map-layer screen "Base") entities)
-       ;         (map (fn [entity]
-       ;                 (move-entity entity (rand-dir) (tiled-map-layer screen "Base") entities))
-      ;              (rest entities)))
-      ;(vector 
-      ;   (->>
-      ;    (move-player (directions (:key screen)) (tiled-map-layer screen "Base") entities)
-      ;    (assoc entities 0 ) ; this is atrocious. Do NOT mutate input!
-      ;    (first )
-      ;   )
-      ;    (map (fn [entity]
-      ;           (move-entity entity (rand-dir) (tiled-map-layer screen "Base") entities ))
-      ;        (rest entities)))
       ((fn []
          (let [t-entities (->>
                             (move-player (directions (:key screen)) (tiled-map-layer screen "Base") entities)
                             (assoc entities 0))]
-           (vector (first t-entities)
-                   (map (fn [entity]
-                          (move-entity entity (rand-dir) (tiled-map-layer screen "Base") t-entities)) (rest t-entities)))
+
+              (loop [tmp-entities t-entities
+                     index 1]
+                (if (< index (count tmp-entities))
+                  (recur
+                    (assoc tmp-entities index (move-entity (get tmp-entities index) (rand-dir) (tiled-map-layer screen "Base") tmp-entities))
+                    (inc index))
+                tmp-entities))
             )))
-        (entities)))
+      entities))
   
   :on-touch-down
   (fn [screen entities]
