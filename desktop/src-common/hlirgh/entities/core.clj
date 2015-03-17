@@ -12,9 +12,11 @@
   ([entity direction layer entities steps]
    (let [{:keys [x y]} entity
          [dx dy] (map (partial * steps) direction)
-         tile (.getTile (tiled-map-cell layer (+ x dx) (+ y dy)))]
-     (if (and (tile-walkable? tile) (not (cell-occupied? [(+ x dx) (+ y dy)] entities)))
-       (assoc entity :x (+ x dx) :y (+ y dy))
+         newX (+ x dx)
+         newY (+ y dy)
+         tile (.getTile (tiled-map-cell layer newX newY))]
+     (if (and (tile-walkable? tile) (not (cell-occupied? [newX newY] entities)))
+       (assoc entity :x newX :y newY)
        entity))))
 
 (defn create-entity
