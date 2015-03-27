@@ -19,6 +19,11 @@
        (assoc entity :x newX :y newY)
        entity))))
 
+(defn prevent-move
+  "Revert entity to original position if the position moved to is occupied."
+  [entity layer entities]
+    (let [{:keys [x y]} entity]))
+
 (defn create-entity
   [template & custom-stats]
   (merge (cell-from-atlas (texture "ascii_tileset.png") (:glyph template)) template (first custom-stats)))
