@@ -4,7 +4,7 @@
             [play-clj.ui :refer :all]
             [hlirgh.utils :refer [pixels-per-tile directions rand-dir]]
             [hlirgh.world.core :refer [cell-occupied?]]
-            [hlirgh.entities.core :refer [move-entity]]
+            [hlirgh.entities.core :refer [move-entity move-entities]]
             [hlirgh.entities.player :refer [player create-player move-player]]
             [hlirgh.entities.ruffian :refer [create-ruffians]])
   (:import [com.badlogic.gdx.scenes.scene2d.ui Label]))
@@ -50,13 +50,14 @@
                             (move-player (directions (:key screen)) (tiled-map-layer screen "Base") entities)
                             (assoc entities 0))]
 
-              (loop [tmp-entities t-entities
-                     index 1]
-                (if (< index (count tmp-entities))
-                  (recur
-                    (assoc tmp-entities index (move-entity (get tmp-entities index) (rand-dir) (tiled-map-layer screen "Base") tmp-entities))
-                    (inc index))
-                tmp-entities))
+              ;(loop [tmp-entities t-entities
+              ;       index 1]
+              ;  (if (< index (count tmp-entities))
+              ;    (recur
+              ;      (assoc tmp-entities index (move-entity (get tmp-entities index) (rand-dir) (tiled-map-layer screen "Base") tmp-entities))
+              ;      (inc index))
+              ;  tmp-entities))
+            (reduce #(move-entities (tiled-map-layer screen "Base") %1 %2) [] t-entities)
             )))
       entities))
   

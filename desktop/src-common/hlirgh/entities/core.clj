@@ -3,6 +3,7 @@
             [hlirgh.utils :refer [absolute-distance pixels-per-tile]]
             [hlirgh.world.core :refer [tile-walkable? cell-occupied?]]
             [hlirgh.entities.utils :refer [cell-from-atlas]]
+            [hlirgh.utils :refer [rand-dir]]
             [play-clj.core :refer :all]))
 
 (defn move-entity
@@ -18,6 +19,13 @@
      (if (and (tile-walkable? tile) (not (cell-occupied? [newX newY] entities)))
        (assoc entity :x newX :y newY)
        entity))))
+
+(defn move-entities
+  [layer entities entity]
+  (conj entities
+        (if (:npc? entity)
+          (move-entity entity (rand-dir) layer entities)
+          entity)))
 
 (defn prevent-move
   "Revert entity to original position if the position moved to is occupied."

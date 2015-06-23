@@ -13,7 +13,8 @@
     :y 1
     :width 1
     :height 1
-    :glyph [0 1]})
+    :glyph [0 1]
+    :npc? true})
 
 (defn create-ruffian
   [& custom-stats]
