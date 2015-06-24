@@ -57,7 +57,12 @@
               ;      (assoc tmp-entities index (move-entity (get tmp-entities index) (rand-dir) (tiled-map-layer screen "Base") tmp-entities))
               ;      (inc index))
               ;  tmp-entities))
-            (reduce #(move-entities (tiled-map-layer screen "Base") %1 %2) [] t-entities)
+            ;(reduce #(move-entities (tiled-map-layer screen "Base") %1 %2) [] t-entities)
+           (->> t-entities
+                (map (fn [entity]
+                       (->> entity
+                            (move-entity (rand-dir) (tiled-map-layer screen "Base") t-entities)
+                            ))))
             )))
       entities))
   

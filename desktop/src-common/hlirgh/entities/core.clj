@@ -8,9 +8,9 @@
 
 (defn move-entity
   "Move an entity a given number of tiles (1 by default) towards a direction."
-  ([entity direction layer entities]
-  (move-entity entity direction layer entities 1))
-  ([entity direction layer entities steps]
+  ([direction layer entities entity]
+  (move-entity direction layer entities 1 entity))
+  ([direction layer entities steps entity]
    (let [{:keys [x y]} entity
          [dx dy] (map (partial * steps) direction)
          newX (+ x dx)
@@ -22,7 +22,7 @@
 
 (defn move-entities
   [layer entities entity]
-  (conj entities
+    (conj entities
         (if (:npc? entity)
           (move-entity entity (rand-dir) layer entities)
           entity)))
