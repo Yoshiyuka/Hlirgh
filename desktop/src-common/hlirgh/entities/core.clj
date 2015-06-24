@@ -4,7 +4,8 @@
             [hlirgh.world.core :refer [tile-walkable? cell-occupied?]]
             [hlirgh.entities.utils :refer [cell-from-atlas]]
             [hlirgh.utils :refer [rand-dir]]
-            [play-clj.core :refer :all]))
+            [play-clj.core :refer :all])
+  (:use [clojure.pprint]))
 
 (defn move-entity
   "Move an entity a given number of tiles (1 by default) towards a direction."
@@ -18,13 +19,13 @@
          tile (.getTile (tiled-map-cell layer newX newY))]
      (if (and (tile-walkable? tile) (not (cell-occupied? [newX newY] entities)))
        (assoc entity :x newX :y newY)
-       entity))))
+       (move-entity (rand-dir) layer entities entity)))))
 
 (defn move-entities
   [layer entities entity]
     (conj entities
         (if (:npc? entity)
-          (move-entity entity (rand-dir) layer entities)
+          (move-entity (rand-dir) layer entities entity)
           entity)))
 
 (defn prevent-move
