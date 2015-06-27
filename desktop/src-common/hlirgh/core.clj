@@ -50,14 +50,10 @@
                             (move-player (directions (:key screen)) (tiled-map-layer screen "Base") entities)
                             (assoc entities 0))]
 
-              ;(loop [tmp-entities t-entities
-              ;       index 1]
-              ;  (if (< index (count tmp-entities))
-              ;    (recur
-              ;      (assoc tmp-entities index (move-entity (get tmp-entities index) (rand-dir) (tiled-map-layer screen "Base") tmp-entities))
-              ;      (inc index))
-              ;  tmp-entities))
-            (reduce #(move-entities (tiled-map-layer screen "Base") %1 %2) [] t-entities)
+            (->> t-entities
+                 (reduce #(move-entities (tiled-map-layer screen "Base") %1 %2) [])
+                 ;(reduce #(prevent-move % (tiled-map-layer screen "Base") t-))
+                 )
             )))
       entities))
   
