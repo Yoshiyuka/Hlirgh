@@ -4,7 +4,7 @@
             [play-clj.ui :refer :all]
             [hlirgh.utils :refer [pixels-per-tile directions rand-dir]]
             [hlirgh.world.core :refer [cell-occupied?]]
-            [hlirgh.entities.core :refer [move-entity move-entities]]
+            [hlirgh.entities.core :refer [move-entity move-entities prevent-move]]
             [hlirgh.entities.player :refer [player create-player move-player]]
             [hlirgh.entities.ruffian :refer [create-ruffians]])
   (:import [com.badlogic.gdx.scenes.scene2d.ui Label]))
@@ -18,7 +18,7 @@
   :on-show
   (fn [screen entities]
     (let [orthogonal-map (orthogonal-tiled-map "test.tmx" (/ 1 pixels-per-tile))
-          camera (orthographic :translate (/ 800 (* 2 pixels-per-tile)) (/ 600 (* 2 pixels-per-tile)))
+          camera (orthographic :translate (/ 640 (* 2 pixels-per-tile)) (/ 480 (* 2 pixels-per-tile)))
           ruffians (create-ruffians orthogonal-map 5)]
       (update! screen :renderer orthogonal-map :camera camera)
       (swap! player create-player)
@@ -53,6 +53,7 @@
             (->> t-entities
                  (reduce #(move-entities (tiled-map-layer screen "Base") %1 %2) [])
                  ;(reduce #(prevent-move % (tiled-map-layer screen "Base") t-))
+                 (prevent-move)
                  )
             )))
       entities))

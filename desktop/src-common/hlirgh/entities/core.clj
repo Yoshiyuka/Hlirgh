@@ -18,8 +18,8 @@
          newY (+ y dy)
          tile (.getTile (tiled-map-cell layer newX newY))]
      (if (and (tile-walkable? tile) (not (cell-occupied? [newX newY] entities)))
-       (assoc entity :x newX :y newY)
-       (move-entity (rand-dir) layer entities entity)))))
+       (assoc entity :oldx x :oldy y :x newX :y newY)
+       (assoc entity :oldx x :oldy y)))))
 
 (defn move-entities
   [layer entities entity]
@@ -30,8 +30,14 @@
 
 (defn prevent-move
   "Revert entity to original position if the position moved to is occupied."
-  [entity layer entities]
-    (let [{:keys [x y]} entity]))
+  [entities]
+    (map (fn [entity] 
+           (let [{:keys [x y]} entity
+                {:keys [oldx oldy]} entity
+                position (conj [] x y)
+                old-position (conj [] oldx oldy)]
+             (println (compare position old-position))
+             entity)) entities))
 
 (defn create-entity
   [template & custom-stats]

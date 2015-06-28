@@ -1,6 +1,6 @@
 (ns hlirgh.utils)
 
-(def ^:const pixels-per-tile 32)
+(def ^:const pixels-per-tile 16)
 
 (defn abs [n] (max n (- n)))
 
